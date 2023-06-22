@@ -2,14 +2,15 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import NewsViewSet, CommentsViewSet
-from users.views import UserViewSet
 
-app_name = 'users'
+
+app_name = 'api'
 
 router_v1 = DefaultRouter()
 router_v1.register(prefix='news', viewset=NewsViewSet,basename='news')
-router_v1.register(prefix='comment', viewset=CommentsViewSet, basename='comment')
-router_v1.register(prefix='users', viewset=UserViewSet, basename='users')
+router_v1.register(r'news/(?P<news_id>\d+)/comments',viewset=CommentsViewSet, basename='comments')
 urlpatterns = [
     path('', include(router_v1.urls)),
+    path('v1/', include('djoser.urls')),
+    path('v1/', include('djoser.urls.jwt')),
 ]
