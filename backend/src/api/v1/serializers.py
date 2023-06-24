@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from news_server.models import News, Comments
+from api.v1.paginations import CommentsPagination
+from news_server.models import Comments, News
 from news_server.servis_likes import get_likes_count
+from rest_framework import serializers
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -13,7 +14,10 @@ class NewsSerializer(serializers.ModelSerializer):
 
     def get_comments(self, obj):
         queryset = Comments.objects.filter(news_id=obj)
-        return CommentsSerializer(queryset, many=True).data
+        paginated_queryset = CommentsPagination().paginate_queryset(
+            queryset, self.context['request']
+            )
+        return CommentsSerializer(paginated_queryset, many=True).data
 
     def get_likes(self, obj):
         return get_likes_count(news_id=obj.id)
@@ -41,5 +45,6 @@ class CommentsSerializer(serializers.ModelSerializer):
             news_id=news_id,
             author=user,
             text=data['text']).exists():
-            raise serializers.ValidationError("Этот комментарий уже существует.")
+            raise serializers.ValidationError(
+                "Этот комментарий уже существует.")
         return data
