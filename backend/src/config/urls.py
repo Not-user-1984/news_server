@@ -33,8 +33,8 @@ urlpatterns = [
         r'^swagger(?P<format>\.json|\.yaml)$',
         schema_view.without_ui(cache_timeout=0),
         name='schema-json'),
-    path('admin/', admin.site.urls),
-    path('api/', include('api.v1.urls', namespace='api')),
     path('swagger/', schema_view.as_view(), name='swagger'),
 
+    path('admin/', admin.site.urls),
+    path('api/', include('api.v1.urls', namespace='api')),
 ]

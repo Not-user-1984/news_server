@@ -1,0 +1,941 @@
+
+swagger: '2.0'
+info:
+  title: Snippets API
+  description: Test description
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@snippets.local
+  license:
+    name: BSD License
+  version: v1
+host: 84.201.167.210
+schemes:
+- http
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /jwt/create/:
+    post:
+      operationId: jwt_create_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenObtainPair'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      tags:
+      - jwt
+    parameters: []
+  /jwt/refresh/:
+    post:
+      operationId: jwt_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+      - jwt
+    parameters: []
+  /jwt/verify/:
+    post:
+      operationId: jwt_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenVerify'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenVerify'
+      tags:
+      - jwt
+    parameters: []
+  /news/:
+    get:
+      operationId: news_list
+      description: ViewSet для новостей
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/News'
+      tags:
+      - news
+    post:
+      operationId: news_create
+      description: ViewSet для новостей
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    parameters: []
+  /news/{id}/:
+    get:
+      operationId: news_read
+      description: ViewSet для новостей
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    put:
+      operationId: news_update
+      description: ViewSet для новостей
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    patch:
+      operationId: news_partial_update
+      description: ViewSet для новостей
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    delete:
+      operationId: news_delete
+      description: ViewSet для новостей
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - news
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Новость.
+      required: true
+      type: integer
+  /news/{id}/like/:
+    post:
+      operationId: news_like
+      description: Добавление лайка к новости.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Новость.
+      required: true
+      type: integer
+  /news/{id}/unlike/:
+    post:
+      operationId: news_unlike
+      description: Удаление лайка у новости.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - news
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Новость.
+      required: true
+      type: integer
+  /news/{news_id}/comments/:
+    get:
+      operationId: news_comments_list
+      description: ViewSet для комментариев
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Comments'
+      tags:
+      - news
+    post:
+      operationId: news_comments_create
+      description: Создание комментария.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Comments'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Comments'
+      tags:
+      - news
+    parameters:
+    - name: news_id
+      in: path
+      description: Ссылка на новость, к которой написан комментарий
+      required: true
+      type: string
+  /news/{news_id}/comments/{id}/:
+    get:
+      operationId: news_comments_read
+      description: ViewSet для комментариев
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Comments'
+      tags:
+      - news
+    put:
+      operationId: news_comments_update
+      description: ViewSet для комментариев
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Comments'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Comments'
+      tags:
+      - news
+    patch:
+      operationId: news_comments_partial_update
+      description: ViewSet для комментариев
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Comments'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Comments'
+      tags:
+      - news
+    delete:
+      operationId: news_comments_delete
+      description: Удаление комментария.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - news
+    parameters:
+    - name: news_id
+      in: path
+      description: Ссылка на новость, к которой написан комментарий
+      required: true
+      type: string
+    - name: id
+      in: path
+      description: A unique integer value identifying this Комментарий.
+      required: true
+      type: integer
+  /users/:
+    get:
+      operationId: users_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+      tags:
+      - users
+    post:
+      operationId: users_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreate'
+      tags:
+      - users
+    parameters: []
+  /users/activation/:
+    post:
+      operationId: users_activation
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Activation'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Activation'
+      tags:
+      - users
+    parameters: []
+  /users/me/:
+    get:
+      operationId: users_me_read
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+      tags:
+      - users
+    put:
+      operationId: users_me_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+      - users
+    patch:
+      operationId: users_me_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+      - users
+    delete:
+      operationId: users_me_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - users
+    parameters: []
+  /users/resend_activation/:
+    post:
+      operationId: users_resend_activation
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+      - users
+    parameters: []
+  /users/reset_password/:
+    post:
+      operationId: users_reset_password
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+      - users
+    parameters: []
+  /users/reset_password_confirm/:
+    post:
+      operationId: users_reset_password_confirm
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PasswordResetConfirm'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordResetConfirm'
+      tags:
+      - users
+    parameters: []
+  /users/reset_username/:
+    post:
+      operationId: users_reset_username
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+      - users
+    parameters: []
+  /users/reset_username_confirm/:
+    post:
+      operationId: users_reset_username_confirm
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UsernameResetConfirm'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UsernameResetConfirm'
+      tags:
+      - users
+    parameters: []
+  /users/set_password/:
+    post:
+      operationId: users_set_password
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SetPassword'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SetPassword'
+      tags:
+      - users
+    parameters: []
+  /users/set_username/:
+    post:
+      operationId: users_set_username
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SetUsername'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SetUsername'
+      tags:
+      - users
+    parameters: []
+  /users/{id}/:
+    get:
+      operationId: users_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+      - users
+    put:
+      operationId: users_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+      - users
+    patch:
+      operationId: users_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+      - users
+    delete:
+      operationId: users_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - users
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Пользователь.
+      required: true
+      type: integer
+definitions:
+  TokenObtainPair:
+    required:
+    - username
+    - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenVerify:
+    required:
+    - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  News:
+    required:
+    - title
+    - text
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      date:
+        title: Date
+        description: Дата создания новости
+        type: string
+        format: date
+        readOnly: true
+      title:
+        title: Title
+        description: Заголовок новости
+        type: string
+        maxLength: 256
+        minLength: 1
+      text:
+        title: Text
+        description: Текст новости
+        type: string
+        minLength: 1
+      author:
+        title: Author
+        type: string
+        readOnly: true
+      comments:
+        title: Comments
+        type: string
+        readOnly: true
+      likes:
+        title: Likes
+        type: string
+        readOnly: true
+  Comments:
+    required:
+    - text
+    - news
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      date:
+        title: Date
+        description: Дата создания комментария
+        type: string
+        format: date
+        readOnly: true
+      text:
+        title: Text
+        description: Текст комментария
+        type: string
+        minLength: 1
+      author:
+        title: Author
+        type: string
+        readOnly: true
+        default: ''
+      news:
+        title: News
+        description: Ссылка на новость, к которой написан комментарий
+        type: integer
+      news_title:
+        title: News title
+        type: string
+        readOnly: true
+        minLength: 1
+  User:
+    required:
+    - email
+    type: object
+    properties:
+      email:
+        title: Электронная почта
+        description: Электронная почта пользователя
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      username:
+        title: Логин
+        description: Логин пользователя
+        type: string
+        readOnly: true
+        minLength: 1
+  UserCreate:
+    required:
+    - email
+    - username
+    - password
+    type: object
+    properties:
+      email:
+        title: Электронная почта
+        description: Электронная почта пользователя
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      username:
+        title: Логин
+        description: Логин пользователя
+        type: string
+        maxLength: 150
+        minLength: 1
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  Activation:
+    required:
+    - uid
+    - token
+    type: object
+    properties:
+      uid:
+        title: Uid
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  SendEmailReset:
+    required:
+    - email
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+  PasswordResetConfirm:
+    required:
+    - uid
+    - token
+    - new_password
+    type: object
+    properties:
+      uid:
+        title: Uid
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+      new_password:
+        title: New password
+        type: string
+        minLength: 1
+  UsernameResetConfirm:
+    required:
+    - new_username
+    type: object
+    properties:
+      new_username:
+        title: Логин
+        description: Логин пользователя
+        type: string
+        maxLength: 150
+        minLength: 1
+  SetPassword:
+    required:
+    - new_password
+    - current_password
+    type: object
+    properties:
+      new_password:
+        title: New password
+        type: string
+        minLength: 1
+      current_password:
+        title: Current password
+        type: string
+        minLength: 1
+  SetUsername:
+    required:
+    - current_password
+    - new_username
+    type: object
+    properties:
+      current_password:
+        title: Current password
+        type: string
+        minLength: 1
+      new_username:
+        title: Логин
+        description: Логин пользователя
+        type: string
+        maxLength: 150
+        minLength: 1

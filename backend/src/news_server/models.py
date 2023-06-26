@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import User
+from django.conf import settings
 
 
 class News(models.Model):
@@ -9,7 +10,7 @@ class News(models.Model):
         help_text="Дата создания новости"
     )
     title = models.CharField(
-        max_length=255,
+        max_length=settings.LIMIT_CHAT,
         help_text="Заголовок новости"
     )
     text = models.TextField(

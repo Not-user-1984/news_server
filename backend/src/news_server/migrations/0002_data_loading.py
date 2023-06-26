@@ -1,6 +1,6 @@
 from django.db import migrations
 import json
-from ..models import News, User , Comments
+
 
 def add_news_and_comments(apps, schema_editor):
     News = apps.get_model('news_server', 'News')
@@ -12,10 +12,12 @@ def add_news_and_comments(apps, schema_editor):
             try:
                 author = User.objects.get(username=item['author'])
             except User.DoesNotExist:
-                # Если пользователь не найден, то создаем нового пользователя со значением email по умолчанию
                 username = item['author']
                 email = f'{username}@example.com'
-                author = User.objects.create_user(username=username, email=email, password='default_password')
+                author = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password='default_password')
             news_item = News(
                 id=item['id'],
                 date=item['date'],
@@ -27,12 +29,16 @@ def add_news_and_comments(apps, schema_editor):
 
             for comment in item['comments']:
                 try:
-                    comment_author = User.objects.get(username=comment['author'], email__isnull=False)
+                    comment_author = User.objects.get(
+                        username=comment['author'],
+                        email__isnull=False)
                 except User.DoesNotExist:
-                    # Если пользователь не найден, то создаем нового пользователя со значением email по умолчанию
                     username = comment['author']
                     email = f'{username}@example.com'
-                    comment_author = User.objects.create_user(username=username, email=email, password='default_password')
+                    comment_author = User.objects.create_user(
+                        username=username,
+                        email=email,
+                        password='default_password')
                 comment_item = Comments(
                     id=comment['id'],
                     date=comment['date'],

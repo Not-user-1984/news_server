@@ -1,10 +1,11 @@
 from news_server.models import Comments, News
+from news_server.servis_likes import add_like, is_liked_by_user, remove_like
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from news_server.servis_likes import add_like, remove_like, is_liked_by_user
+
 from .permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from .serializers import CommentsSerializer, NewsSerializer
-from rest_framework.decorators import action
 
 
 class NewsViewSet(viewsets.ModelViewSet):
@@ -16,9 +17,6 @@ class NewsViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """
         Метод создания новости.
-
-        Args:
-            serializer: Сериализатор новости.
         """
         serializer.save(author=self.request.user)
 
@@ -26,10 +24,6 @@ class NewsViewSet(viewsets.ModelViewSet):
     def like(self, request, pk=None):
         """
         Добавление лайка к новости.
-
-        Args:
-            request: Запрос HTTP.
-            pk(int): Идентификатор новости.
         """
         news = self.get_object()
         if is_liked_by_user(news_id=news.id, user_id=request.user.id):
@@ -44,10 +38,6 @@ class NewsViewSet(viewsets.ModelViewSet):
     def unlike(self, request, pk=None):
         """
         Удаление лайка у новости.
-
-        Args:
-            request: Запрос HTTP.
-            pk(int): Идентификатор новости.
         """
         news = self.get_object()
         if not is_liked_by_user(news_id=news.id, user_id=request.user.id):
@@ -62,9 +52,6 @@ class NewsViewSet(viewsets.ModelViewSet):
     def get_serializer_context(self):
         """
         Получение контекста сериализатора.
-
-        Returns:
-            dict: Контекст сериализатора.
         """
         context = super().get_serializer_context()
         context['request'] = self.request
@@ -80,18 +67,12 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """
         Метод создания комментария.
-
-        Args:
-            serializer: Сериализатор комментария.
         """
         serializer.save(author=self.request.user)
 
     def get_queryset(self):
         """
         Получение списка комментариев.
-
-        Returns:
-            QuerySet: Список комментариев.
         """
         news_id = self.request.query_params.get('news_id')
         queryset = Comments.objects.filter(
@@ -101,14 +82,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         """
         Создание комментария.
-
-        Args:
-            request: Запрос HTTP.
-            args: Args.
-            kwargs: Kwargs.
-
-        Returns:
-            Response: Ответ HTTP.
         """
         if not request.user.is_authenticated:
             return Response(
@@ -121,14 +94,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         """
         Удаление комментария.
-
-        Args:
-            request: Запрос HTTP.
-            args: Args.
-            kwargs: Kwargs.
-
-        Returns:
-            Response: Ответ HTTP.
         """
         instance = self.get_object()
         if request.user.is_admin or instance.author == request.user:
