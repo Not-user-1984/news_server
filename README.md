@@ -1,8 +1,8 @@
-## Проект **NEWS_SErves** 
+## Проект **NEWS_Serves** 
 
 
 ![python version](https://img.shields.io/badge/Python-3.9-green)
-![django version](https://img.shields.io/badge/Django-4.1-green)
+![django version](https://img.shields.io/badge/Django-4.2.2-green)
 ![Docker version](https://img.shields.io/badge/Docker-4.15-green)
 ![Djangorestframework version](https://img.shields.io/badge/Djangorestframework-3.14-green)
 ![PyJWT version](https://img.shields.io/badge/PyJWT-2.6-green)
@@ -15,15 +15,20 @@
 [http://84.201.167.210/api/v1/news/](http://84.201.167.210/api/v1/news/)
 
 [Документация Api](http://84.201.167.210:8002/)
-Документация сделана Snippets запушина в контeйнере Docker (не работает тестирование, но посмотреть какие ручки есть можно)
+Документация сделана на swagger-ui запущена в Docker 
 
 [админка](http://84.201.167.210/admin/)
 User: Test  Pass: 1234 (в админке можно выбирать роль у каждого пользователя)
 <hr>
 
-## Описание
 [servis_likes](backend/src/news_server/servis_likes.py)
 Лайки сделаны через redis(развернут контейнер в docker)
+
+http://84.201.167.210/api/v1/news/2/like/ поставить
+
+http://84.201.167.210/api/v1/news/2/like/ убрать
+
+<hr>
 
 [0002_data_loading.py](backend/src/news_server/migrations/0002_data_loading.py)
  сделана загрузка тестовых новостей и пользователей через миграцию 
@@ -172,7 +177,7 @@ http://84.201.167.210/api/v1/news/
 }
 ```
 
-Чтобы создать комментрарий к новости POST (Доступно только с токеном):
+Чтобы создать комментарий к новости POST (Доступно только с токеном):
 ```
 http://84.201.167.210/api/v1/news/2/comments/
 ```
@@ -187,9 +192,7 @@ http://84.201.167.210/api/v1/news/2/comments/
 </details>
 
 <br>
-<br>
-<br>
-<hr>
+
 
 #### **Разработчик**:
 [Дима Плужников](https://github.com/Not-user-1984)

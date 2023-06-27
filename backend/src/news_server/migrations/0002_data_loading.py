@@ -19,7 +19,6 @@ def add_news_and_comments(apps, schema_editor):
                     email=email,
                     password='default_password')
             news_item = News(
-                id=item['id'],
                 date=item['date'],
                 title=item['title'],
                 text=item['text'],
@@ -40,7 +39,6 @@ def add_news_and_comments(apps, schema_editor):
                         email=email,
                         password='default_password')
                 comment_item = Comments(
-                    id=comment['id'],
                     date=comment['date'],
                     text=comment['text'],
                     author=comment_author,

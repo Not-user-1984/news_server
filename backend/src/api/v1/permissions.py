@@ -7,8 +7,13 @@ class IsAdminOrReadOnly(permissions.BasePermission):
                 or request.user.is_authenticated)
 
 
-class IsAuthorOrAdminOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+class AllowAnyReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in ['GET']:
             return True
-        return request.user.is_admin or obj.author == request.user
+        elif request.method in ['POST'] and view.action in ['like', 'unlike']:
+            return True
+        elif request.user and request.user.is_authenticated:
+            return True
+        else:
+            return False

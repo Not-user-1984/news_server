@@ -4,7 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
+from .permissions import AllowAnyReadOnly, IsAdminOrReadOnly
 from .serializers import CommentsSerializer, NewsSerializer
 
 
@@ -12,7 +12,7 @@ class NewsViewSet(viewsets.ModelViewSet):
     """ViewSet для новостей"""
     queryset = News.objects.all()
     serializer_class = NewsSerializer
-    permission_classes = [IsAuthorOrAdminOrReadOnly]
+    permission_classes = [AllowAnyReadOnly]
 
     def perform_create(self, serializer):
         """
@@ -44,7 +44,6 @@ class NewsViewSet(viewsets.ModelViewSet):
             return Response(
                 {'error': 'вы еще не поставили лайк'},
                 status=status.HTTP_400_BAD_REQUEST)
-
         remove_like(news_id=news.id, user_id=request.user.id)
         serializer = self.serializer_class(news)
         return Response(serializer.data)
@@ -56,6 +55,18 @@ class NewsViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = request.user
+        if user.is_staff or instance.author == user:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(
+                {'error': "Вы не можете удалить эту новость"},
+                status=status.HTTP_403_FORBIDDEN
+                )
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
