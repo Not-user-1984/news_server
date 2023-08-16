@@ -10,23 +10,33 @@
 ![gunicornversion](https://img.shields.io/badge/nginx-1.19.3-green)
 
 
-#### Проект доступен по адресу
 
-[http://84.201.167.210/api/v1/news/](http://84.201.167.210/api/v1/news/)
+#### Запуск 
+```
+сd infra_itfox/server_dev/
+docker compose up -d --build
+docker exec -it backend python manage.py migrate
+docker exec -it backend python manage.py createsuperuser
+```
 
-[Документация Api](http://84.201.167.210:8002/)
+[http://localhost/api/v1/news/](http://localhost/api/v1/news/)
+
+[Документация Api](http://localhost:8002/)
 Документация сделана на swagger-ui запущена в Docker 
 
-[админка](http://84.201.167.210/admin/)
+[админка](http://localhost/admin/)
 User: Test  Pass: 1234 (в админке можно выбирать роль у каждого пользователя)
 <hr>
 
 [servis_likes](backend/src/news_server/servis_likes.py)
 Лайки сделаны через redis(развернут контейнер в docker)
 
-http://84.201.167.210/api/v1/news/2/like/ поставить
+так же есть реалиция через кеш, а потoм через базу в этом проекте(там это отметка прочитанно)
+[проект коротких блогов с подпиской](https://github.com/Not-user-1984/testovoe_y_p)
 
-http://84.201.167.210/api/v1/news/2/unlike/ убрать
+http://localhost/api/v1/news/2/like/ поставить
+
+http://localhost/api/v1/news/2/unlike/ убрать
 
 <hr>
 
@@ -136,7 +146,7 @@ docker-compose exec backend python manage.py collectstatic --noinput
 Примеры запросов:
 Для регистрации пользователя, необходимо отправить POST запрос на адрес:
 ```
-http://84.201.167.210/api/v1/users/
+http://localhost/api/v1/users/
 ```
 Тело запроса
 ```
@@ -149,7 +159,7 @@ http://84.201.167.210/api/v1/users/
 
 Для получения токена, следует отправить POST запрос на адрес:
 ```
-http://84.201.167.210/api/v1/jwt/create
+http://localhost/api/v1/jwt/create
 ```
 Тело запроса
 ```
@@ -161,12 +171,12 @@ http://84.201.167.210/api/v1/jwt/create
 
 Получить список новостей можно отправив GET запрос на эндпоинт:
 ```
-http://84.201.167.210/api/v1/news/
+http://localhost/api/v1/news/
 ```
 
 Чтобы создать новость отправить POST запрос на адрес(Доступно только с токеном):
 ```
-http://84.201.167.210/api/v1/news/
+http://localhost /api/v1/news/
 ```
 
 Тело запроса
@@ -179,7 +189,7 @@ http://84.201.167.210/api/v1/news/
 
 Чтобы создать комментарий к новости POST (Доступно только с токеном):
 ```
-http://84.201.167.210/api/v1/news/2/comments/
+http://localhost /api/v1/news/2/comments/
 ```
 Тело запроса
 ```

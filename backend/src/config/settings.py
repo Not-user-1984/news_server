@@ -16,7 +16,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "84.201.167.210",
     "backend",
     "*",
 ]
@@ -74,6 +73,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = 'users.User'
+
 
 DATABASES = {
     'default': {
